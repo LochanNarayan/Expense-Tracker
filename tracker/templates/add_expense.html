@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-extrabold text-gray-800 dark:text-white mb-2">Add New Expense</h1>
+      <p class="text-gray-600 dark:text-gray-300">Track your spending with detailed information</p>
+    </div>
+
+    <!-- Form -->
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- Date Field -->
+      <div class="form-group">
+        <label for="{{ form.date.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          Date
+        </label>
+        {{ form.date }}
+        {% if form.date.errors %}
+          <div class="mt-1 text-red-600 dark:text-red-400 text-sm">
+            {% for error in form.date.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Category Field -->
+      <div class="form-group">
+        <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          </svg>
+          Category
+        </label>
+        {{ form.category }}
+        {% if form.category.errors %}
+          <div class="mt-1 text-red-600 dark:text-red-400 text-sm">
+            {% for error in form.category.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Amount Field -->
+      <div class="form-group">
+        <label for="{{ form.amount.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+          </svg>
+          Amount (₹)
+        </label>
+        {{ form.amount }}
+        {% if form.amount.errors %}
+          <div class="mt-1 text-red-600 dark:text-red-400 text-sm">
+            {% for error in form.amount.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Description Field -->
+      <div class="form-group">
+        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Description
+        </label>
+        {{ form.description }}
+        {% if form.description.errors %}
+          <div class="mt-1 text-red-600 dark:text-red-400 text-sm">
+            {% for error in form.description.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex gap-4 pt-4">
+        <button type="submit" class="relative flex-1 inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+          <span class="text-xl">💾</span>
+          Save Expense
+        </button>
+        <a href="{% url 'dashboard' %}" class="inline-flex items-center justify-center px-8 py-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 transform hover:-translate-y-1">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-300 text-gray-800 dark:text-white bg-white dark:bg-gray-700 shadow-sm;
+  }
+  
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    @apply shadow-lg transform scale-[1.02];
+  }
+  
+  .form-group textarea {
+    @apply resize-none;
+    min-height: 120px;
+  }
+  
+  .form-group select {
+    @apply cursor-pointer;
+  }
+  
+  .form-group select option {
+    @apply bg-white dark:bg-gray-700 text-gray-800 dark:text-white;
+  }
+  
+  .btn-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-shine:hover::before {
+    left: 100%;
+  }
+</style>
+
+{% endblock %}

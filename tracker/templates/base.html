@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenseTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        accent: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-in-left': 'slideInLeft 0.8s ease-out',
+                        'slide-in-right': 'slideInRight 0.8s ease-out',
+                        'slide-in-up': 'slideInUp 0.8s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                        'grow-up': 'growUp 0.8s ease-out',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideInLeft: {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        },
+                        slideInRight: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        },
+                        slideInUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        growUp: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-inter antialiased transition-colors duration-300">
+    <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 glass-effect border-b border-gray-100 dark:border-gray-700 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="{% url 'home' %}" class="flex items-center space-x-3 transition-transform hover:scale-105">
+                    <div class="w-10 h-10 bg-gradient-to-br from-accent-500 to-accent-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        💰
+                    </div>
+                    <span class="text-xl font-extrabold gradient-text">ExpenseTracker</span>
+                </a>
+                
+                <nav class="hidden md:flex items-center space-x-4">
+                    <a href="{% url 'home' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'home' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                        Home
+                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'dashboard' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                            Dashboard
+                        </a>
+                        <a href="{% url 'add_expense' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'add_expense' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                            Add Expense
+                        </a>
+                        <a href="{% url 'split_expenses' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'split_expenses' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                            Split Bills
+                        </a>
+                        <a href="{% url 'spending_chart' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'spending_chart' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                            Analytics
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'login' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                            Login
+                        </a>
+                        <a href="{% url 'register' %}" class="nav-underline relative px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 font-medium transition-all duration-300 hover:text-gray-900 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 {% if request.resolver_match.url_name == 'register' %}active text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 font-semibold{% endif %}">
+                            Register
+                        </a>
+                    {% endif %}
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300" title="Toggle theme">
+                        <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <svg id="theme-toggle-light-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+                        </svg>
+                    </button>
+                    
+        {% if user.is_authenticated %}
+                        <div class="flex items-center space-x-2 bg-glass-bg glass-effect border border-glass-bg rounded-full px-4 py-2 text-gray-800 dark:text-gray-200 font-semibold text-sm transition-all duration-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:transform hover:-translate-y-1">
+                            <div class="w-6 h-6 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                {{ user.username|first|upper }}
+                            </div>
+                            <span>{{ user.username }}</span>
+                        </div>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+              {% csrf_token %}
+                            <button type="submit" class="p-2 rounded-full text-gray-600 dark:text-gray-300 transition-all duration-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 hover:scale-110" title="Logout">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M17 16l4-4m0 0l-4-4m4 4H7"/>
+                                    <path d="M9 20a7 7 0 1 1 0-16"/>
+                                </svg>
+              </button>
+            </form>
+        {% endif %}
+      </div>
+    </div>
+        </div>
+    </header>
+    
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const html = document.documentElement;
+
+        // Check for saved theme preference or default to light
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIcon.classList.add('hidden');
+        } else {
+            html.classList.remove('dark');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        // Theme toggle click handler
+        themeToggleBtn.addEventListener('click', function() {
+            html.classList.toggle('dark');
+            
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('color-theme', 'dark');
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+            } else {
+                localStorage.setItem('color-theme', 'light');
+                themeToggleLightIcon.classList.add('hidden');
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with fade-in class
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.animate-fade-in');
+            fadeElements.forEach(el => observer.observe(el));
+        });
+
+        // Nav link hover effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-underline');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                link.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+    
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(31, 41, 55, 0.8);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .btn-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-shine:hover::before {
+            left: 100%;
+        }
+        
+        .nav-underline::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-underline:hover::before {
+            width: 80%;
+        }
+        
+        .nav-underline.active::before {
+            width: 80%;
+        }
+    </style>
+</body>
+</html>
+
+        });
+    </script>
+</body>
+</html>
+

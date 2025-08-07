@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+  <!-- Animated Background Elements -->
+  <div class="absolute inset-0">
+    <div class="absolute inset-0">
+      <!-- Professional geometric shapes -->
+      <div class="absolute w-32 h-32 bg-white/5 rounded-full top-1/5 left-1/10 animate-float"></div>
+      <div class="absolute w-24 h-24 bg-white/5 rounded-lg top-1/3 right-1/5 animate-float" style="animation-delay: -2s;"></div>
+      <div class="absolute w-16 h-16 bg-white/5 rounded-full bottom-1/4 left-1/3 animate-float" style="animation-delay: -4s;"></div>
+      <div class="absolute w-20 h-20 bg-white/5 rounded-lg top-2/3 right-1/3 animate-float" style="animation-delay: -1s;"></div>
+      <div class="absolute w-28 h-28 bg-white/5 rounded-full bottom-1/3 right-1/4 animate-float" style="animation-delay: -3s;"></div>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 to-purple-600/80 dark:from-gray-900/80 dark:to-gray-800/80"></div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <!-- Text Section -->
+      <div class="animate-slide-in-left">
+        <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium mb-6">
+          <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+          Smart Finance Management
+        </div>
+        <h1 class="text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
+          Track Your 
+          <span class="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Expenses</span>
+          <br>Like Never Before
+        </h1>
+        <p class="text-xl text-blue-100 mb-8 leading-relaxed">
+          Take control of your finances with our intelligent expense tracker. 
+          Monitor spending, analyze patterns, and achieve your financial goals with ease.
+        </p>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6 mb-8">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-white mb-1 animate-bounce-slow">5+</div>
+            <div class="text-blue-200 text-sm">Active Users</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-white mb-1 animate-bounce-slow" style="animation-delay: -0.5s;">₹50+</div>
+            <div class="text-blue-200 text-sm">Tracked</div>
+          </div>
+          
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class=" relative inline-flex items-center justify-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+              <span class="text-xl">📊</span>
+              Go to Dashboard
+            </a>
+          {% else %}
+            <a href="{% url 'register' %}" class=" relative inline-flex items-center justify-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+              <span class="text-xl">🚀</span>
+              Get Started Free
+            </a>
+            <a href="{% url 'login' %}" class="inline-flex items-center justify-center gap-3 bg-transparent text-white border-2 border-white/30 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1">
+              <span class="text-xl">🔐</span>
+              Sign In
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <!-- Visual App Preview -->
+      <div class="animate-slide-in-right">
+        <div class="relative">
+          <!-- Main App Mockup -->
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+              </div>
+              <div class="text-white text-sm font-medium">ExpenseTracker</div>
+            </div>
+            
+            <!-- Chart Bars -->
+            <div class="flex items-end justify-between h-32 mb-4">
+              <div class="w-8 bg-gradient-to-t from-blue-500 to-blue-300 rounded-t-lg animate-grow-up" style="height: 60%; animation-delay: 0.1s;"></div>
+              <div class="w-8 bg-gradient-to-t from-purple-500 to-purple-300 rounded-t-lg animate-grow-up" style="height: 80%; animation-delay: 0.2s;"></div>
+              <div class="w-8 bg-gradient-to-t from-green-500 to-green-300 rounded-t-lg animate-grow-up" style="height: 40%; animation-delay: 0.3s;"></div>
+              <div class="w-8 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-lg animate-grow-up" style="height: 90%; animation-delay: 0.4s;"></div>
+              <div class="w-8 bg-gradient-to-t from-red-500 to-red-300 rounded-t-lg animate-grow-up" style="height: 70%; animation-delay: 0.5s;"></div>
+              <div class="w-8 bg-gradient-to-t from-indigo-500 to-indigo-300 rounded-t-lg animate-grow-up" style="height: 50%; animation-delay: 0.6s;"></div>
+              <div class="w-8 bg-gradient-to-t from-pink-500 to-pink-300 rounded-t-lg animate-grow-up" style="height: 85%; animation-delay: 0.7s;"></div>
+            </div>
+            
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 gap-4 text-white">
+              <div class="text-center">
+                <div class="text-2xl font-bold">₹12,450</div>
+                <div class="text-sm text-blue-200">This Month</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold">₹415</div>
+                <div class="text-sm text-blue-200">Daily Avg</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Floating Cards -->
+          <div class="absolute -top-4 -right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 shadow-lg animate-float">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                <span class="text-white text-lg">💰</span>
+              </div>
+              <div class="text-white">
+                <div class="font-semibold">+₹2,340</div>
+                <div class="text-sm text-blue-200">Today</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="absolute -bottom-4 -left-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 shadow-lg animate-float" style="animation-delay: -2s;">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                <span class="text-white text-lg">📈</span>
+              </div>
+              <div class="text-white">
+                <div class="font-semibold">+15%</div>
+                <div class="text-sm text-blue-200">Savings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions Section (for authenticated users) -->
+{% if user.is_authenticated %}
+<div class="bg-gradient-to-br from-blue-600 to-purple-600 dark:from-gray-800 dark:to-gray-900 text-white py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-4xl font-bold text-center mb-12 animate-fade-in">Quick Actions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <a href="{% url 'add_expense' %}" class="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 hover:bg-white/20 animate-fade-in">
+        <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">➕</div>
+        <h3 class="text-2xl font-bold mb-2">Add Expense</h3>
+        <p class="text-white/80">Record a new expense quickly</p>
+      </a>
+      
+      <a href="{% url 'dashboard' %}" class="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 hover:bg-white/20 animate-fade-in">
+        <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📊</div>
+        <h3 class="text-2xl font-bold mb-2">Dashboard</h3>
+        <p class="text-white/80">View your expense overview</p>
+      </a>
+      
+      <a href="{% url 'split_expenses' %}" class="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 hover:bg-white/20 animate-fade-in">
+        <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">👥</div>
+        <h3 class="text-2xl font-bold mb-2">Split Bills</h3>
+        <p class="text-white/80">Divide expenses with friends</p>
+      </a>
+      
+      <a href="{% url 'spending_chart' %}" class="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 hover:bg-white/20 animate-fade-in">
+        <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📈</div>
+        <h3 class="text-2xl font-bold mb-2">Analytics</h3>
+        <p class="text-white/80">Analyze your spending patterns</p>
+      </a>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Features Section -->
+<div class="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-4xl font-bold text-center text-gray-800 dark:text-white mb-16 animate-fade-in">Why Choose Our Expense Tracker?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-fade-in">
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span class="text-3xl">🔒</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Secure & Private</h3>
+        <p class="text-gray-600 dark:text-gray-300">Your financial data is encrypted and secure with bank-level protection.</p>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-fade-in">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span class="text-3xl">📱</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Mobile Friendly</h3>
+        <p class="text-gray-600 dark:text-gray-300">Access your expenses anywhere with our responsive mobile design.</p>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-fade-in">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span class="text-3xl">📊</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Smart Analytics</h3>
+        <p class="text-gray-600 dark:text-gray-300">Get insights into your spending habits with detailed charts and reports.</p>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-fade-in">
+        <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span class="text-3xl">⚡</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Lightning Fast</h3>
+        <p class="text-gray-600 dark:text-gray-300">Quick and intuitive interface for seamless expense tracking experience.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .btn-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-shine:hover::before {
+    left: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .text-5xl {
+      font-size: 2.5rem;
+    }
+    .text-6xl {
+      font-size: 3rem;
+    }
+  }
+</style>
+
+{% endblock %}

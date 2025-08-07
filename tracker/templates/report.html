@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Expense Reports</h2>
+
+<div style="margin-bottom: 20px;">
+  <a href="?filter=month"><button>This Month</button></a>
+  <a href="?filter=week"><button>Last 7 Days</button></a>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Filter by Date Range</button>
+</form>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Category</th>
+    <th>Amount</th>
+  </tr>
+  {% for expense in expenses %}
+  <tr>
+    <td>{{ expense.date }}</td>
+    <td>{{ expense.category }}</td>
+    <td>{{ expense.amount }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+<style>
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }

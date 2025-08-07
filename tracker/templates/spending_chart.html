@@ -1,0 +1,506 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-blue-600 dark:text-blue-400 mb-2 tracking-wide">Spending Analytics</h1>
+            <p class="text-gray-600 dark:text-gray-300">Visualize and export your expense data with advanced filtering</p>
+        </div>
+        
+        <!-- Date Filter Section -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-6 mb-8 border border-blue-100 dark:border-gray-600">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Date Range Filter
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Start Date</label>
+                    <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors bg-white dark:bg-gray-700 text-gray-800 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">End Date</label>
+                    <input type="date" id="endDate" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-colors bg-white dark:bg-gray-700 text-gray-800 dark:text-white">
+                </div>
+                <div>
+                    <button onclick="applyDateFilter()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-md">
+                        Apply Filter
+                    </button>
+                </div>
+                <div>
+                    <button onclick="clearDateFilter()" class="w-full bg-gray-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 shadow-md">
+                        Clear Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chart Controls -->
+        <div class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex space-x-4">
+                <button id="barBtn" class="chart-btn active px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-1" onclick="setChartType('bar')">
+                    Bar Chart
+                </button>
+                <button id="lineBtn" class="chart-btn px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-1" onclick="setChartType('line')">
+                    Line Chart
+                </button>
+            </div>
+            
+            <div class="flex space-x-3">
+                <button class="export-btn flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:from-green-700 hover:to-emerald-700 transform hover:-translate-y-1" onclick="exportToCSV()">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"/>
+                    </svg>
+                    <span>Export CSV</span>
+                </button>
+                <button class="export-btn pdf flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:from-red-700 hover:to-pink-700 transform hover:-translate-y-1" onclick="exportToPDF()">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 18h12V6l-4-4H4v16zm2-2V4h5.172L14 6.828V16H6z"/>
+                        <path d="M8 8h4v2H8V8zm0 4h4v2H8v-2z"/>
+                    </svg>
+                    <span>Export PDF</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Chart Container -->
+        <div class="relative bg-gray-50 dark:bg-gray-700 rounded-xl p-6 mb-6">
+            <canvas id="spendingChart" height="320" class="w-full"></canvas>
+            <div id="loadingOverlay" class="loading-overlay absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center rounded-xl opacity-0 invisible transition-all duration-300">
+                <div class="spinner w-10 h-10 border-4 border-gray-200 dark:border-gray-600 border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"></div>
+            </div>
+        </div>
+        
+        <!-- No Data Message -->
+        <div id="noDataMsg" class="text-center text-gray-500 dark:text-gray-400 text-lg font-semibold py-8 hidden">
+            No spending data available to display.
+        </div>
+        
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium">Total Expenses</p>
+                        <p class="text-2xl font-bold" id="totalExpenses">₹0.00</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-sm font-medium">Average per Day</p>
+                        <p class="text-2xl font-bold" id="avgPerDay">₹0.00</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-purple-100 text-sm font-medium">Data Points</p>
+                        <p class="text-2xl font-bold" id="dataPoints">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+  // Parse chart data from Django context
+  let chartLabels = JSON.parse('{{ labels|escapejs }}');
+  let chartData = JSON.parse('{{ data|escapejs }}');
+    let originalLabels = [...chartLabels];
+    let originalData = [...chartData];
+    
+  // Defensive: fallback if not valid arrays
+  if (!Array.isArray(chartLabels) || !Array.isArray(chartData)) {
+    chartLabels = [];
+    chartData = [];
+        originalLabels = [];
+        originalData = [];
+    }
+    
+  // Chart color palette
+  const chartColors = [
+    'rgba(45, 108, 223, 0.7)',
+    'rgba(96, 165, 250, 0.7)',
+    'rgba(34, 197, 94, 0.7)',
+    'rgba(251, 191, 36, 0.7)',
+    'rgba(239, 68, 68, 0.7)',
+    'rgba(168, 85, 247, 0.7)',
+    'rgba(236, 72, 153, 0.7)'
+  ];
+    
+  // Build dataset colors
+  function getBarColors(len) {
+    let arr = [];
+    for (let i = 0; i < len; i++) {
+      arr.push(chartColors[i % chartColors.length]);
+    }
+    return arr;
+  }
+    
+  // Chart.js instance
+  let chartType = 'bar';
+  let chartInstance = null;
+    
+  function renderChart(type) {
+    if (chartInstance) chartInstance.destroy();
+    
+    // Check if dark mode is active
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    
+    // Color scheme based on theme
+    const textColor = isDarkMode ? '#e5e7eb' : '#2d6cdf';
+    const gridColor = isDarkMode ? '#374151' : '#e0e7ef';
+    const backgroundColor = isDarkMode ? '#374151' : '#ffffff';
+        
+    chartInstance = new Chart(document.getElementById('spendingChart').getContext('2d'), {
+      type: type,
+      data: {
+        labels: chartLabels,
+        datasets: [{
+          label: 'Amount Spent',
+          data: chartData,
+          backgroundColor: type === 'bar' ? getBarColors(chartData.length) : 'rgba(45, 108, 223, 0.3)',
+          borderColor: type === 'bar' ? getBarColors(chartData.length).map(c => c.replace('0.7', '1')) : '#2d6cdf',
+          borderWidth: 3,
+          pointBackgroundColor: isDarkMode ? '#374151' : '#fff',
+          tension: 0.4,
+          fill: type === 'line',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { 
+            display: true, 
+            labels: { 
+              color: textColor, 
+              font: { size: 16 } 
+            } 
+          },
+          tooltip: { 
+            enabled: true, 
+            backgroundColor: isDarkMode ? '#1f2937' : '#2d6cdf', 
+            titleColor: '#fff', 
+            bodyColor: '#fff',
+            borderColor: isDarkMode ? '#374151' : '#2d6cdf',
+            borderWidth: 1
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, font: { size: 14 } }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: gridColor },
+            ticks: { color: textColor, font: { size: 14 } }
+          }
+        },
+        animation: {
+          duration: 900,
+          easing: 'easeOutQuart'
+        }
+      }
+    });
+    updateSummary();
+    updateNoDataMsg();
+  }
+    
+  // Chart type toggle
+  function setChartType(type) {
+    chartType = type;
+    renderChart(type);
+    document.getElementById('barBtn').classList.toggle('active', type === 'bar');
+    document.getElementById('lineBtn').classList.toggle('active', type === 'line');
+  }
+    
+    // Date filter functions
+    function applyDateFilter() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        if (!startDate || !endDate) {
+            alert('Please select both start and end dates');
+            return;
+        }
+        
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        
+        if (start > end) {
+            alert('Start date cannot be after end date');
+            return;
+        }
+        
+        // Filter data based on date range
+        const filteredLabels = [];
+        const filteredData = [];
+        
+        for (let i = 0; i < originalLabels.length; i++) {
+            const date = new Date(originalLabels[i]);
+            if (date >= start && date <= end) {
+                filteredLabels.push(originalLabels[i]);
+                filteredData.push(originalData[i]);
+            }
+        }
+        
+        chartLabels = filteredLabels;
+        chartData = filteredData;
+        
+        renderChart(chartType);
+        
+        // Update button states
+        document.getElementById('barBtn').classList.remove('active');
+        document.getElementById('lineBtn').classList.remove('active');
+        document.getElementById(chartType + 'Btn').classList.add('active');
+    }
+    
+    function clearDateFilter() {
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        
+        chartLabels = [...originalLabels];
+        chartData = [...originalData];
+        
+        renderChart(chartType);
+        
+        // Update button states
+        document.getElementById('barBtn').classList.remove('active');
+        document.getElementById('lineBtn').classList.remove('active');
+        document.getElementById(chartType + 'Btn').classList.add('active');
+    }
+    
+    // Update summary statistics
+    function updateSummary() {
+        const total = chartData.reduce((sum, val) => sum + val, 0);
+        const avgPerDay = chartData.length > 0 ? total / chartData.length : 0;
+        
+        document.getElementById('totalExpenses').textContent = `₹${total.toFixed(2)}`;
+        document.getElementById('avgPerDay').textContent = `₹${avgPerDay.toFixed(2)}`;
+        document.getElementById('dataPoints').textContent = chartData.length;
+    }
+    
+    // Show/hide no data message
+    function updateNoDataMsg() {
+        const msg = document.getElementById('noDataMsg');
+        if (chartLabels.length === 0 || chartData.length === 0 || chartData.every(v => v === 0)) {
+            msg.classList.remove('hidden');
+            document.getElementById('spendingChart').style.opacity = 0.3;
+        } else {
+            msg.classList.add('hidden');
+            document.getElementById('spendingChart').style.opacity = 1;
+        }
+    }
+    
+    // Export to CSV with date filter
+    function exportToCSV() {
+        if (chartLabels.length === 0 || chartData.length === 0) {
+            alert('No data available to export');
+            return;
+        }
+        
+        showLoading();
+        
+        setTimeout(() => {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Date,Amount\n";
+            
+            for (let i = 0; i < chartLabels.length; i++) {
+                csvContent += `"${chartLabels[i]}","${chartData[i]}"\n`;
+            }
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            let filename = `expense_data_${new Date().toISOString().split('T')[0]}`;
+            
+            if (startDate && endDate) {
+                filename += `_${startDate}_to_${endDate}`;
+            }
+            
+            link.setAttribute("download", `${filename}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            hideLoading();
+        }, 500);
+    }
+    
+    // Export to PDF with date filter
+    function exportToPDF() {
+        if (chartLabels.length === 0 || chartData.length === 0) {
+            alert('No data available to export');
+            return;
+        }
+        
+        showLoading();
+        
+        setTimeout(() => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(20);
+            doc.setTextColor(99, 102, 241);
+            doc.text('Expense Analytics Report', 20, 30);
+            
+            // Add date range if filtered
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 40);
+            
+            if (startDate && endDate) {
+                doc.text(`Date Range: ${startDate} to ${endDate}`, 20, 50);
+            }
+            
+            // Add chart data table
+            doc.setFontSize(14);
+            doc.setTextColor(30, 41, 59);
+            doc.text('Expense Data:', 20, startDate && endDate ? 70 : 60);
+            
+            let yPos = startDate && endDate ? 90 : 80;
+            doc.setFontSize(10);
+            
+            // Table header
+            doc.setFillColor(99, 102, 241);
+            doc.setTextColor(255, 255, 255);
+            doc.rect(20, yPos - 5, 170, 10, 'F');
+            doc.text('Date', 25, yPos);
+            doc.text('Amount ($)', 120, yPos);
+            
+            // Table data
+            doc.setTextColor(30, 41, 59);
+            for (let i = 0; i < chartLabels.length; i++) {
+                yPos += 10;
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 30;
+                }
+                doc.text(chartLabels[i], 25, yPos);
+                doc.text(chartData[i].toString(), 120, yPos);
+            }
+            
+            // Add summary
+            const total = chartData.reduce((sum, val) => sum + val, 0);
+            const average = total / chartData.length;
+            
+            yPos += 20;
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 30;
+            }
+            
+            doc.setFontSize(12);
+            doc.setTextColor(99, 102, 241);
+            doc.text('Summary:', 20, yPos);
+            yPos += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+            doc.text(`Total Expenses: $${total.toFixed(2)}`, 25, yPos);
+            yPos += 8;
+            doc.text(`Average per Entry: $${average.toFixed(2)}`, 25, yPos);
+            yPos += 8;
+            doc.text(`Number of Entries: ${chartData.length}`, 25, yPos);
+            
+            // Save PDF with date range in filename
+            let filename = `expense_report_${new Date().toISOString().split('T')[0]}`;
+            if (startDate && endDate) {
+                filename += `_${startDate}_to_${endDate}`;
+            }
+            
+            doc.save(`${filename}.pdf`);
+            
+            hideLoading();
+        }, 1000);
+    }
+    
+    // Loading functions
+    function showLoading() {
+        document.getElementById('loadingOverlay').classList.remove('opacity-0', 'invisible');
+        document.getElementById('loadingOverlay').classList.add('opacity-100', 'visible');
+    }
+    
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.add('opacity-0', 'invisible');
+        document.getElementById('loadingOverlay').classList.remove('opacity-100', 'visible');
+    }
+    
+    // Initialize
+    updateNoDataMsg();
+    updateSummary();
+    renderChart(chartType);
+    
+    // Set default date range to last 30 days
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+    
+    document.getElementById('endDate').value = today.toISOString().split('T')[0];
+    document.getElementById('startDate').value = thirtyDaysAgo.toISOString().split('T')[0];
+    
+    // Re-render chart on theme change
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        setTimeout(() => renderChart(chartType), 300); // Small delay to allow theme transition
+    });
+</script>
+
+<style>
+    .chart-btn.active {
+        background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+    
+    .export-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .loading-overlay {
+        backdrop-filter: blur(4px);
+    }
+    
+    @media (max-width: 768px) {
+        .chart-btn, .export-btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+    }
+</style>
+
+{% endblock %}
