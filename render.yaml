@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: expense-tracker
+    env: python
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn expense_project.wsgi
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: expense_project.settings
